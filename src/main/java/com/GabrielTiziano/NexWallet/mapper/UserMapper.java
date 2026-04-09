@@ -19,6 +19,9 @@ public class UserMapper {
                 .id(userModel.getId())
                 .name(userModel.getName())
                 .email(userModel.getEmail())
+                .assets(userModel.getAssets() != null
+                        ? userModel.getAssets().stream().map(AssetMapper::toAssetDTO).toList()
+                        : null)
                 .build();
     }
 }
