@@ -8,6 +8,7 @@ import com.GabrielTiziano.NexWallet.model.AssetModel;
 import com.GabrielTiziano.NexWallet.model.UserModel;
 import com.GabrielTiziano.NexWallet.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -21,8 +22,11 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final CoinGeckoClient coinGeckoClient;
+    private final PasswordEncoder passwordEncoder;
 
     public UserResponseDTO registerUser(UserRequestDTO userRequestDTO){
+        String password = userRequestDTO.getPassword();
+        userRequestDTO.setPassword(passwordEncoder.encode(password));
          return UserMapper
                  .toUserResponseDTO(userRepository.save(UserMapper.toModel(userRequestDTO)));
     }
