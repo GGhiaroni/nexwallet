@@ -12,3 +12,8 @@ spring:
 nexwallet:
   client:
     coingecko: https://api.coingecko.com/api/v3
+
+api:
+  security:
+    token:
+      secret: ${JWT_SECRET}
