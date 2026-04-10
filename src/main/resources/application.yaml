@@ -8,3 +8,7 @@ spring:
     redis:
       host: localhost
       port: 6379
+
+nexwallet:
+  client:
+    coingecko: https://api.coingecko.com/api/v3
