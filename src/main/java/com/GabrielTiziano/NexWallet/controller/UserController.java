@@ -1,6 +1,7 @@
 package com.GabrielTiziano.NexWallet.controller;
 
 import com.GabrielTiziano.NexWallet.dto.AssetDTO;
+import com.GabrielTiziano.NexWallet.dto.PortfolioResponseDTO;
 import com.GabrielTiziano.NexWallet.dto.UserRequestDTO;
 import com.GabrielTiziano.NexWallet.dto.UserResponseDTO;
 import com.GabrielTiziano.NexWallet.service.UserService;
@@ -23,5 +24,10 @@ public class UserController {
     @PostMapping("/{id}/assets")
     public ResponseEntity<UserResponseDTO> addAsset(@PathVariable String id, @RequestBody AssetDTO assetDTO){
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.addAsset(id, assetDTO));
+    }
+
+    @GetMapping("/{id}/portfolio")
+    public ResponseEntity<PortfolioResponseDTO> getUserPortfolio(@PathVariable String id){
+        return ResponseEntity.ok(userService.getUserPortfolio(id));
     }
 }
