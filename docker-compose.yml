@@ -15,5 +15,19 @@ services:
     ports:
       - "6379:6379"
 
+  api:
+    build: .
+    container_name: crypto_api
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mongodb
+      - redis
+    environment:
+      - SPRING_DATA_MONGODB_URI=mongodb://mongodb:27017/cryptotracker
+      - SPRING_REDIS_HOST=redis
+      - SPRING_REDIS_PORT=6379
+      - API_SECURITY_TOKEN_SECRET=senha-super-secreta-nexwallet-123
+
 volumes:
   mongo_data:
