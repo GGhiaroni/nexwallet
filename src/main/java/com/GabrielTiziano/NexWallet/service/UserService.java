@@ -36,13 +36,21 @@ public class UserService {
       UserModel user = userRepository.findById(id)
               .orElseThrow(() -> new UserNotFoundException("Usuário não encontrado na NexWallet."));
 
-      AssetModel newAsset = AssetMapper.toModel(assetDTO);
+      Optional<AssetModel> optionalAssetModel = user.getAssets().stream()
+              .filter(asset -> asset.getCryptoId().equalsIgnoreCase(assetDTO.getCryptoId()))
+              .findFirst();
 
-      user.getAssets().add(newAsset);
+      if(optionalAssetModel.isPresent()){
+          AssetModel existingAsset = optionalAssetModel.get();
+          existingAsset.setQuantity(existingAsset.getQuantity() + assetDTO.getQuantity());
+      } else {
+          AssetModel newAsset = AssetMapper.toModel(assetDTO);
+          user.getAssets().add(newAsset);
+      }
 
-      UserModel userUpdated = userRepository.save(user);
+        UserModel userUpdated = userRepository.save(user);
 
-      return UserMapper.toUserResponseDTO(userUpdated);
+        return UserMapper.toUserResponseDTO(userUpdated);
     }
 
     public PortfolioResponseDTO getUserPortfolio(String userId){
@@ -64,13 +72,18 @@ public class UserService {
         List<AssetPortfolioDTO> portfolioAssets = new ArrayList<>();
 
         for(AssetModel asset : user.getAssets()){
-
+            Double currentPrice = 0.0;
             String coinName = asset.getCryptoId();
 
-            Double currentPrice = apiResponse.get(coinName).get("usd");
+            if (apiResponse != null && apiResponse.containsKey(coinName)) {
+                Map<String, Double> coinData = apiResponse.get(coinName);
+
+                if (coinData != null && coinData.containsKey("usd")) {
+                    currentPrice = coinData.get("usd");
+                }
+            }
 
             Double totalValue = asset.getQuantity() * currentPrice;
-
             totalBalance += totalValue;
 
             AssetPortfolioDTO assetPortfolioDTO = AssetPortfolioDTO
