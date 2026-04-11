@@ -40,7 +40,7 @@ public class UserController {
     }
 
     @PostMapping("/user/{id}/assets")
-    public ResponseEntity<UserResponseDTO> addAsset(@Valid @PathVariable String id, @RequestBody AssetDTO assetDTO){
+    public ResponseEntity<UserResponseDTO> addAsset(@PathVariable String id, @Valid @RequestBody AssetDTO assetDTO){
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.addAsset(id, assetDTO));
     }
 
