@@ -2,6 +2,7 @@ package com.GabrielTiziano.NexWallet.service;
 
 import com.GabrielTiziano.NexWallet.client.CoinGeckoClient;
 import com.GabrielTiziano.NexWallet.dto.*;
+import com.GabrielTiziano.NexWallet.exception.EmailAlreadyExistsException;
 import com.GabrielTiziano.NexWallet.exception.UserNotFoundException;
 import com.GabrielTiziano.NexWallet.mapper.AssetMapper;
 import com.GabrielTiziano.NexWallet.mapper.UserMapper;
@@ -26,6 +27,10 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
     public UserResponseDTO registerUser(UserRequestDTO userRequestDTO){
+        if(userRepository.findUserByEmail(userRequestDTO.getEmail()).isPresent()) {
+            throw new EmailAlreadyExistsException("Esse e-mail já está cadastrado na NexWallet.");
+        }
+
         String password = userRequestDTO.getPassword();
         userRequestDTO.setPassword(passwordEncoder.encode(password));
          return UserMapper
