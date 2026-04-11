@@ -4,6 +4,7 @@ import com.GabrielTiziano.NexWallet.config.TokenService;
 import com.GabrielTiziano.NexWallet.dto.*;
 import com.GabrielTiziano.NexWallet.model.UserModel;
 import com.GabrielTiziano.NexWallet.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,12 +22,12 @@ public class UserController {
     private final TokenService tokenService;
 
     @PostMapping("/auth/register")
-    public ResponseEntity<UserResponseDTO> registerUser(@RequestBody UserRequestDTO userRequestDTO){
+    public ResponseEntity<UserResponseDTO> registerUser(@Valid @RequestBody UserRequestDTO userRequestDTO){
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.registerUser(userRequestDTO));
     }
 
     @PostMapping("/auth/login")
-    public ResponseEntity<LoginResponseDTO> userLogin(@RequestBody LoginRequestDTO loginRequestDTO){
+    public ResponseEntity<LoginResponseDTO> userLogin(@Valid @RequestBody LoginRequestDTO loginRequestDTO){
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(loginRequestDTO.email(), loginRequestDTO.password());
 
         Authentication authentication = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
@@ -39,7 +40,7 @@ public class UserController {
     }
 
     @PostMapping("/user/{id}/assets")
-    public ResponseEntity<UserResponseDTO> addAsset(@PathVariable String id, @RequestBody AssetDTO assetDTO){
+    public ResponseEntity<UserResponseDTO> addAsset(@Valid @PathVariable String id, @RequestBody AssetDTO assetDTO){
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.addAsset(id, assetDTO));
     }
 
